@@ -1,0 +1,416 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Samurai Street - Juste Qualité, Sushi Art</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;700&family=Plus+Jakarta+Sans:wght@400;600;800&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    
+    <style>
+        body {
+            font-family: 'Plus Jakarta Sans', 'Cairo', sans-serif;
+            background-color: #0b0b0b;
+        }
+        .gold-gradient {
+            background: linear-gradient(135deg, #bf953f 0%, #fcf6ba 25%, #b38728 50%, #fbf5b7 75%, #aa771c 100%);
+        }
+        .text-gold {
+            background: linear-gradient(135deg, #bf953f 0%, #fcf6ba 25%, #b38728 50%, #fbf5b7 75%, #aa771c 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+        .gold-border {
+            border-image: linear-gradient(135deg, #bf953f, #fcf6ba, #b38728) 1;
+        }
+    </style>
+</head>
+<body class="text-gray-100 antialiased overflow-x-hidden">
+
+    <nav class="sticky top-0 z-50 bg-[#0b0b0b]/95 border-b border-gray-800 backdrop-blur-md py-4 px-6 transition-all">
+        <div class="max-w-7xl mx-auto flex justify-between items-center">
+            <div class="flex items-center gap-3">
+                <img src="images/logo.jpg" alt="Samurai Street Logo" class="h-12 w-12 rounded-full border border-[#bf953f] object-cover">
+                <span class="text-xl font-extrabold tracking-wider uppercase text-gold">Samurai Street</span>
+            </div>
+            
+            <div class="flex items-center gap-2 bg-gray-900 border border-gray-800 rounded-lg p-1">
+                <button onclick="changeLanguage('en')" id="btn-en" class="px-3 py-1 text-xs font-semibold rounded-md bg-[#bf953f] text-black transition">EN</button>
+                <button onclick="changeLanguage('fr')" id="btn-fr" class="px-3 py-1 text-xs font-semibold rounded-md text-gray-400 hover:text-white transition">FR</button>
+                <button onclick="changeLanguage('dr')" id="btn-dr" class="px-3 py-1 text-xs font-semibold rounded-md text-gray-400 hover:text-white transition">دارجة</button>
+            </div>
+        </div>
+    </nav>
+
+    <header class="relative min-h-[70vh] flex items-center justify-center text-center px-4 bg-gradient-to-b from-black to-[#0b0b0b] border-b border-gray-900">
+        <div class="absolute inset-0 opacity-20 pointer-events-none bg-[radial-gradient(#bf953f_1px,transparent_1px)] [background-size:16px_16px]"></div>
+        <div class="max-w-3xl relative z-10">
+            <span class="inline-block text-xs uppercase tracking-widest text-[#bf953f] font-bold px-3 py-1 border border-[#bf953f]/30 rounded-full mb-4 bg-black/50" data-key="hero-badge">✨ Juste Qualité - Sushi Art</span>
+            <h1 class="text-4xl md:text-6xl font-extrabold mb-6 tracking-tight leading-tight" id="hero-title">
+                SUSHIS DE QUALITÉ SUPÉRIEURE <br><span class="text-gold">POUR TOUT LE MONDE</span>
+            </h1>
+            <p class="text-gray-400 text-lg md:text-xl mb-8 max-w-2xl mx-auto" data-key="hero-desc">
+                Découvrez l'art du sushi authentique au meilleur prix au Maroc. Fait maison avec passion et 100% Halal.
+            </p>
+            <a href="#menu" class="gold-gradient text-black font-bold px-8 py-4 rounded-full shadow-lg hover:opacity-90 transform hover:-translate-y-1 transition duration-300 inline-block text-lg" data-key="hero-btn">
+                <i class="fa-solid fa-utensils mr-2"></i> Commander Maintenant
+            </a>
+        </div>
+    </header>
+
+    <section class="py-20 px-6 max-w-7xl mx-auto">
+        <div class="grid grid-cols-1 lg:grid-cols-2 gap-12 items-center">
+            <div>
+                <span class="text-[#bf953f] font-bold text-sm tracking-wider uppercase block mb-2" data-key="exp-title">NOTRE HISTOIRE</span>
+                <h2 class="text-3xl md:text-4xl font-extrabold mb-6 text-white" id="exp-headline">14 Ans d'Expérience & Passion Culinaire</h2>
+                <p class="text-gray-400 leading-relaxed mb-6 text-justify" data-key="exp-p1">
+                    Depuis 2012, notre Chef a perfectionné l'art culinaire asiatique à travers les plus grandes cuisines du Maroc et à l'international (Koweït). De Hay Riad à Rabat, en passant par Tanger, Kénitra, Matsuri Road Zaër, Wakami Harhoura et Shuko Lounge, chaque étape a enrichi notre savoir-faire unique.
+                </p>
+                <p class="text-gray-400 leading-relaxed mb-8 text-justify" data-key="exp-p2">
+                    En 2026, nous lançons <strong>Samurai Street</strong> à Salé Karia pour concrétiser cette vision : offrir une expérience culinaire de luxe, avec des ingrédients 100% frais et Halal, accessible à tous.
+                </p>
+                
+                <div class="grid grid-cols-3 gap-4 border-t border-gray-800 pt-6 text-center">
+                    <div class="bg-gray-900/50 p-3 rounded-xl border border-gray-800">
+                        <div class="text-[#bf953f] text-2xl font-bold mb-1">14</div>
+                        <div class="text-xs text-gray-400" data-key="badge-exp">Ans d'Expérience</div>
+                    </div>
+                    <div class="bg-gray-900/50 p-3 rounded-xl border border-gray-800">
+                        <div class="text-[#bf953f] text-2xl font-bold mb-1"><i class="fa-solid fa-check-to-slot"></i></div>
+                        <div class="text-xs text-gray-400">100% Halal</div>
+                    </div>
+                    <div class="bg-gray-900/50 p-3 rounded-xl border border-gray-800">
+                        <div class="text-[#bf953f] text-2xl font-bold mb-1"><i class="fa-solid fa-star"></i></div>
+                        <div class="text-xs text-gray-400" data-key="badge-qual">Qualité Pro</div>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="grid grid-cols-2 gap-4">
+                <img src="images/chef-1.jpg" alt="Chef preparing sushi" class="rounded-xl object-cover h-64 w-full shadow-md border border-gray-800 transform hover:scale-105 transition duration-300">
+                <img src="images/chef-2.jpg" alt="Premium Sushi Board" class="rounded-xl object-cover h-64 w-full shadow-md border border-gray-800 transform hover:scale-105 transition duration-300 mt-4">
+                <img src="images/chef-3.jpg" alt="Chef presenting boat" class="rounded-xl object-cover h-64 w-full shadow-md border border-gray-800 transform hover:scale-105 transition duration-300 -mt-4">
+                <img src="images/plate.jpg" alt="Special Dish" class="rounded-xl object-cover h-64 w-full shadow-md border border-gray-800 transform hover:scale-105 transition duration-300">
+            </div>
+        </div>
+    </section>
+
+    <section id="menu" class="py-20 px-6 bg-gradient-to-b from-[#0b0b0b] to-black border-t border-gray-900">
+        <div class="max-w-7xl mx-auto text-center mb-16">
+            <span class="text-[#bf953f] font-bold text-sm tracking-wider uppercase" data-key="menu-badge">LES PACKS EXCLUSIFS</span>
+            <h2 class="text-3xl md:text-5xl font-extrabold mt-2 text-white" data-key="menu-title">Choisissez Votre Pack Samouraï</h2>
+            <div class="w-24 h-1 gold-gradient mx-auto mt-4 rounded-full"></div>
+        </div>
+
+        <div class="max-w-7xl mx-auto grid grid-cols-1 md:grid-cols-3 gap-8">
+            <div class="bg-gradient-to-b from-gray-900 to-black rounded-2xl border border-gray-800 overflow-hidden shadow-2xl flex flex-col justify-between hover:border-[#bf953f]/50 transition duration-300">
+                <div class="relative">
+                    <img src="images/pack-solo.jpg" alt="Pack Solo" class="w-full h-56 object-cover">
+                    <div class="absolute top-4 right-4 bg-red-600 text-white font-black px-3 py-1 text-sm rounded-full shadow-lg">59 DH</div>
+                </div>
+                <div class="p-6 flex-grow flex flex-col justify-between">
+                    <div>
+                        <h3 class="text-2xl font-bold mb-2 text-white">PACK SOLO</h3>
+                        <p class="text-gray-400 text-sm mb-4" data-key="solo-desc">L'expérience sushi complète à petit prix.</p>
+                        <ul class="space-y-2 text-sm text-gray-300 mb-6">
+                            <li><i class="fa-solid fa-circle-check text-[#bf953f] mr-2"></i> 12 Pièces Sushi Variés</li>
+                            <li><i class="fa-solid fa-circle-check text-[#bf953f] mr-2"></i> Frites Croustillantes</li>
+                            <li><i class="fa-solid fa-circle-check text-[#bf953f] mr-2"></i> Boisson Mokhito Frais</li>
+                        </ul>
+                    </div>
+                    <button onclick="selectPack('Pack Solo (59 DH)')" class="w-full py-3 bg-gray-800 hover:bg-[#bf953f] hover:text-black font-bold rounded-xl transition duration-300 text-center uppercase text-sm" data-key="select-btn">Choisir Ce Pack</button>
+                </div>
+            </div>
+
+            <div class="bg-gradient-to-b from-gray-900 to-black rounded-2xl border-2 border-[#bf953f] overflow-hidden shadow-2xl flex flex-col justify-between transform md:-translate-y-4 transition duration-300 relative">
+                <div class="absolute top-0 left-1/2 transform -translate-x-1/2 -translate-y-1/2 gold-gradient text-black text-xs font-black px-4 py-1 rounded-full uppercase tracking-wider shadow-md z-10" data-key="popular">Populaire</div>
+                <div class="relative">
+                    <img src="images/pack-duo.jpg" alt="Pack Duo" class="w-full h-56 object-cover">
+                    <div class="absolute top-4 right-4 bg-red-600 text-white font-black px-3 py-1 text-sm rounded-full shadow-lg">89 DH</div>
+                </div>
+                <div class="p-6 flex-grow flex flex-col justify-between">
+                    <div>
+                        <h3 class="text-2xl font-bold mb-2 text-gold">PACK DUO</h3>
+                        <p class="text-gray-400 text-sm mb-4" data-key="duo-desc">L'expérience sushi de luxe en amoureux.</p>
+                        <ul class="space-y-2 text-sm text-gray-300 mb-6">
+                            <li><i class="fa-solid fa-circle-check text-[#bf953f] mr-2"></i> 16 Pièces Sushi Variés</li>
+                            <li><i class="fa-solid fa-circle-check text-[#bf953f] mr-2"></i> Frites Croustillantes</li>
+                            <li><i class="fa-solid fa-circle-check text-[#bf953f] mr-2"></i> 1 Soupe Chaude + 2 Boissons</li>
+                        </ul>
+                    </div>
+                    <button onclick="selectPack('Pack Duo (89 DH)')" class="w-full py-3 gold-gradient text-black font-black rounded-xl hover:opacity-90 transition duration-300 text-center uppercase text-sm" data-key="select-btn">Choisir Ce Pack</button>
+                </div>
+            </div>
+
+            <div class="bg-gradient-to-b from-gray-900 to-black rounded-2xl border border-gray-800 overflow-hidden shadow-2xl flex flex-col justify-between hover:border-[#bf953f]/50 transition duration-300">
+                <div class="relative">
+                    <img src="images/pack-family.jpg" alt="Pack Family" class="w-full h-56 object-cover">
+                    <div class="absolute top-4 right-4 bg-red-600 text-white font-black px-3 py-1 text-sm rounded-full shadow-lg">119 DH</div>
+                </div>
+                <div class="p-6 flex-grow flex flex-col justify-between">
+                    <div>
+                        <h3 class="text-2xl font-bold mb-2 text-white">PACK FAMILY</h3>
+                        <p class="text-gray-400 text-sm mb-4" data-key="family-desc">L'expérience familiale luxueuse chez vous.</p>
+                        <ul class="space-y-2 text-sm text-gray-300 mb-6">
+                            <li><i class="fa-solid fa-circle-check text-[#bf953f] mr-2"></i> 24 Pièces Sushi Mix Premium</li>
+                            <li><i class="fa-solid fa-circle-check text-[#bf953f] mr-2"></i> 1 Grande Soupe Miso Familiale</li>
+                            <li><i class="fa-solid fa-circle-check text-[#bf953f] mr-2"></i> 2 Frites + 1L Coca-Cola</li>
+                        </ul>
+                    </div>
+                    <button onclick="selectPack('Pack Family (119 DH)')" class="w-full py-3 bg-gray-800 hover:bg-[#bf953f] hover:text-black font-bold rounded-xl transition duration-300 text-center uppercase text-sm" data-key="select-btn">Choisir Ce Pack</button>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <section id="checkout" class="py-20 px-6 max-w-3xl mx-auto">
+        <div class="bg-gradient-to-b from-gray-900 to-[#0b0b0b] rounded-3xl p-8 border border-gray-800 shadow-2xl">
+            <h2 class="text-2xl md:text-3xl font-extrabold mb-2 text-center text-white" data-key="form-title">🛒 Valider Votre Commande</h2>
+            <p class="text-center text-gray-400 text-sm mb-8" data-key="form-desc">Remplissez le formulaire ci-dessous, la commande sera envoyée instantanément sur notre WhatsApp.</p>
+            
+            <form id="orderForm" onsubmit="sendToWhatsApp(event)" class="space-y-6">
+                <div>
+                    <label class="block text-xs uppercase text-[#bf953f] tracking-wider font-bold mb-2" data-key="lbl-pack">Pack Sélectionné</label>
+                    <select id="selectedPack" class="w-full bg-black border border-gray-800 rounded-xl px-4 py-3 text-white focus:outline-none focus:border-[#bf953f]" required>
+                        <option value="" disabled selected data-key="opt-placeholder">-- Sélectionnez un Pack --</option>
+                        <option value="Pack Solo (59 DH)">Pack Solo - 59 DH</option>
+                        <option value="Pack Duo (89 DH)">Pack Duo - 89 DH</option>
+                        <option value="Pack Family (119 DH)">Pack Family - 119 DH</option>
+                    </select>
+                </div>
+
+                <div>
+                    <label class="block text-xs uppercase text-[#bf953f] tracking-wider font-bold mb-2" data-key="lbl-qty">Quantité</label>
+                    <input type="number" id="quantity" min="1" value="1" class="w-full bg-black border border-gray-800 rounded-xl px-4 py-3 text-white focus:outline-none focus:border-[#bf953f]" required>
+                </div>
+
+                <div>
+                    <label class="block text-xs uppercase text-[#bf953f] tracking-wider font-bold mb-2" data-key="lbl-name">Nom Complet</label>
+                    <input type="text" id="clientName" placeholder="Ex: Ahmed El Alami" class="w-full bg-black border border-gray-800 rounded-xl px-4 py-3 text-white focus:outline-none focus:border-[#bf953f]" required>
+                </div>
+
+                <div>
+                    <label class="block text-xs uppercase text-[#bf953f] tracking-wider font-bold mb-2" data-key="lbl-phone">Numéro de Téléphone</label>
+                    <input type="tel" id="clientPhone" placeholder="Ex: 0612345678" class="w-full bg-black border border-gray-800 rounded-xl px-4 py-3 text-white focus:outline-none focus:border-[#bf953f]" required>
+                </div>
+
+                <div>
+                    <label class="block text-xs uppercase text-[#bf953f] tracking-wider font-bold mb-2" data-key="lbl-address">Adresse Exacte</label>
+                    <textarea id="clientAddress" rows="3" placeholder="Ex: Salé Karia, Secteur 7, N° 45" class="w-full bg-black border border-gray-800 rounded-xl px-4 py-3 text-white focus:outline-none focus:border-[#bf953f]" required></textarea>
+                </div>
+
+                <button type="submit" class="w-full py-4 gold-gradient text-black font-black text-lg rounded-xl shadow-lg hover:opacity-95 transform active:scale-95 transition duration-200">
+                    <i class="fa-brands fa-whatsapp text-xl mr-2"></i> <span data-key="btn-submit">Envoyer la Commande via WhatsApp</span>
+                </button>
+            </form>
+        </div>
+    </section>
+
+    <footer class="bg-black border-t border-gray-900 py-12 px-6 text-gray-500 text-sm">
+        <div class="max-w-7xl mx-auto grid grid-cols-1 md:grid-cols-3 gap-8 items-center text-center md:text-left">
+            <div>
+                <span class="text-white font-bold text-lg tracking-wider uppercase text-gold">SAMURAI STREET</span>
+                <p class="mt-2 text-xs" data-key="foot-desc">Juste Qualité - Sushi Art. Une fusion parfaite de tradition, d'excellence culinaire et d'infrastructures locales.</p>
+            </div>
+            
+            <div class="space-y-2">
+                <div class="text-white font-semibold"><i class="fa-solid fa-location-dot text-[#bf953f] mr-2"></i> Address</div>
+                <p class="text-xs">Salé Karia, Secteur 7, Morocco</p>
+                <div class="text-white font-semibold pt-2"><i class="fa-solid fa-clock text-[#bf953f] mr-2"></i> <span data-key="foot-hours">Horaires de Travail</span></div>
+                <p class="text-xs">12:00 PM - 02:00 AM</p>
+            </div>
+
+            <div class="flex flex-col items-center md:items-end gap-3">
+                <div class="text-white font-semibold" data-key="foot-social">Suivez-nous</div>
+                <a href="https://www.instagram.com/samuraistret/" target="_blank" class="text-gray-400 hover:text-white transition text-2xl">
+                    <i class="fa-brands fa-instagram"></i>
+                </a>
+                <p class="text-[10px] text-gray-600 mt-4">&copy; 2026 Samurai Street. Built for samuraistreet.online</p>
+            </div>
+        </div>
+    </footer>
+
+    <script>
+        // Translations Matrix
+        const translations = {
+            en: {
+                "hero-badge": "✨ Juste Qualité - Sushi Art",
+                "hero-title": "PREMIUM QUALITY SUSHIS <br><span class='text-gold'>FOR EVERYONE</span>",
+                "hero-desc": "Discover authentic sushi art at the best price in Morocco. Homemade with passion and 100% Halal.",
+                "hero-btn": "<i class='fa-solid fa-utensils mr-2'></i> Order Now",
+                "exp-title": "OUR STORY",
+                "exp-headline": "14 Years of Experience & Culinary Passion",
+                "exp-p1": "Since 2012, our Chef has perfected Asian culinary art across the finest kitchens in Morocco and internationally (Kuwait). From Hay Riad to Tangier, Kenitra, Matsuri Road Zaër, Wakami Harhoura, and Shuko Lounge, each milestone has enriched our unique craftsmanship.",
+                "exp-p2": "In 2026, we launch Samurai Street in Salé Karia to actualize this vision: offering a luxury dining experience, with 100% fresh and Halal ingredients, accessible to everyone.",
+                "badge-exp": "Years of Experience",
+                "badge-qual": "Pro Quality",
+                "menu-badge": "EXCLUSIVE PACKS",
+                "menu-title": "Choose Your Samurai Pack",
+                "solo-desc": "The complete sushi experience at a mini price.",
+                "duo-desc": "The premium luxury sushi experience for couples.",
+                "family-desc": "The ultimate luxury family experience at your home.",
+                "popular": "Popular",
+                "select-btn": "Choose This Pack",
+                "form-title": "🛒 Validate Your Order",
+                "form-desc": "Fill in the form below, the order will be instantly transmitted to our WhatsApp.",
+                "lbl-pack": "Selected Pack",
+                "opt-placeholder": "-- Select a Pack --",
+                "lbl-qty": "Quantity",
+                "lbl-name": "Full Name",
+                "lbl-phone": "Phone Number",
+                "lbl-address": "Exact Address",
+                "btn-submit": "Send Order via WhatsApp",
+                "foot-desc": "Juste Qualité - Sushi Art. A perfect blend of tradition, culinary excellence, and local accessibility.",
+                "foot-hours": "Working Hours",
+                "foot-social": "Follow Us"
+            },
+            fr: {
+                "hero-badge": "✨ Juste Qualité - Sushi Art",
+                "hero-title": "SUSHIS DE QUALITÉ SUPÉRIEURE <br><span class='text-gold'>POUR TOUT LE MONDE</span>",
+                "hero-desc": "Découvrez l'art du sushi authentique au meilleur prix au Maroc. Fait maison avec passion et 100% Halal.",
+                "hero-btn": "<i class='fa-solid fa-utensils mr-2'></i> Commander Maintenant",
+                "exp-title": "NOTRE HISTOIRE",
+                "exp-headline": "14 Ans d'Expérience & Passion Culinaire",
+                "exp-p1": "Depuis 2012, notre Chef a perfectionné l'art culinaire asiatique à travers les plus grandes cuisines du Maroc et à l'international (Koweït). De Hay Riad à Rabat, en passant par Tanger, Kénitra, Matsuri Road Zaër, Wakami Harhoura et Shuko Lounge, chaque étape a enrichi notre savoir-faire unique.",
+                "exp-p2": "En 2026, nous lançons Samurai Street à Salé Karia pour concrétiser cette vision : offrir une expérience culinaire de luxe, avec des ingrédients 100% frais et Halal, accessible à tous.",
+                "badge-exp": "Ans d'Expérience",
+                "badge-qual": "Qualité Pro",
+                "menu-badge": "LES PACKS EXCLUSIFS",
+                "menu-title": "Choisissez Votre Pack Samouraï",
+                "solo-desc": "L'expérience sushi complète à petit prix.",
+                "duo-desc": "L'expérience sushi de luxe en amoureux.",
+                "family-desc": "L'expérience familiale luxueuse chez vous.",
+                "popular": "Populaire",
+                "select-btn": "Choisir Ce Pack",
+                "form-title": "🛒 Valider Votre Commande",
+                "form-desc": "Remplissez le formulaire ci-dessous, la commande sera envoyée instantanément sur notre WhatsApp.",
+                "lbl-pack": "Pack Sélectionné",
+                "opt-placeholder": "-- Sélectionnez un Pack --",
+                "lbl-qty": "Quantité",
+                "lbl-name": "Nom Complet",
+                "lbl-phone": "Numéro de Téléphone",
+                "lbl-address": "Adresse Exacte",
+                "btn-submit": "Envoyer la Commande via WhatsApp",
+                "foot-desc": "Juste Qualité - Sushi Art. Une fusion parfaite de tradition, d'excellence culinaire et d'infrastructures locales.",
+                "foot-hours": "Horaires de Travail",
+                "foot-social": "Suivez-nous"
+            },
+            dr: {
+                "hero-badge": "✨ جودة عالية - فن السوشي",
+                "hero-title": "سوشي بجودة عالمية <br><span class='text-gold'>ومن حق كولشي</span>",
+                "hero-desc": "اكتشف متعة السوشي الحقيقي بأحسن ثمن فالمغرب. مصايب ف الدار بكل شغف و100% حلال.",
+                "hero-btn": "<i class='fa-solid fa-utensils mr-2'></i> طلب دابا نيشان",
+                "exp-title": "القصة ديالنا",
+                "exp-headline": "14 عام ديال الخبرة والشغف فهاد المجال",
+                "exp-p1": "من 2012 والشيف ديالنا كيطور المهارات ديالو فالمطبخ الأسيوي فكبرى المطاعم فالمغرب وفباقي الدول (الكويت). من حي الرياض للرباط، طنجة، القنيطرة، طريق زعير، الهرهورة، وشوكو لونج، كل تجربة زادتنا إتقان وتميز.",
+                "exp-p2": "فـ 2026، قررنا نبداو مشروع Samurai Street فـ سلا القرية قطاع 7 باش نقربو ليكم تجربة فاخرة، بمكونات طرية 100% وحلال، وبأثمنة فالمتناول.",
+                "badge-exp": "عام ديال الخبرة",
+                "badge-qual": "جودة احترافية",
+                "menu-badge": "الباكات الحصرية",
+                "menu-title": "اختار باك الساموراي ديالك",
+                "solo-desc": "وجبة كاملة مفركّسة بأقل ثمن.",
+                "duo-desc": "تجربة سوشي راقية دوزها فدارك نتا واللي عزيز عليك.",
+                "family-desc": "تجربة مطعم فاخرة تجمع العائلة كاملة فداركم.",
+                "popular": "مطلوب بزاف",
+                "select-btn": "اختار هذا الباك",
+                "form-title": "🛒 أكد الطلب ديالك",
+                "form-desc": "عمر هاد المعلومات، والطلب ديالك غيمشي أوتوماتيكياً للواتساب ديالنا محسوب ومقاد.",
+                "lbl-pack": "الباك اللي اختاريتي",
+                "opt-placeholder": "-- اختار الباك من هنا --",
+                "lbl-qty": "الكمية",
+                "lbl-name": "الاسم الكامل",
+                "lbl-phone": "رقم الهاتف",
+                "lbl-address": "العنوان بالتدقيق",
+                "btn-submit": "صيفط الطلب عبر الواتساب",
+                "foot-desc": "ساموراي ستريت - متعة السوشي الحقيقي وجودة عالية للجميع.",
+                "foot-hours": "أوقات العمل",
+                "foot-social": "تابعنا على"
+            }
+        };
+
+        // Change Language Logic
+        function changeLanguage(lang) {
+            // Update active button classes
+            ['en', 'fr', 'dr'].forEach(l => {
+                const btn = document.getElementById(`btn-${l}`);
+                if (l === lang) {
+                    btn.classList.add('bg-[#bf953f]', 'text-black');
+                    btn.classList.remove('text-gray-400');
+                } else {
+                    btn.classList.remove('bg-[#bf953f]', 'text-black');
+                    btn.classList.add('text-gray-400');
+                }
+            });
+
+            // Update DOM texts
+            document.getElementById('hero-title').innerHTML = translations[lang]['hero-title'];
+            document.getElementById('exp-headline').innerText = translations[lang]['exp-headline'];
+            
+            // Set RTL/LTR direction adjustments if needed for Darija
+            if (lang === 'dr') {
+                document.body.style.direction = 'rtl';
+            } else {
+                document.body.style.direction = 'ltr';
+            }
+
+            document.querySelectorAll('[data-key]').forEach(element => {
+                const key = element.getAttribute('data-key');
+                if (translations[lang][key]) {
+                    element.innerHTML = translations[lang][key];
+                }
+            });
+        }
+
+        // Handle Product Selection
+        function selectPack(packValue) {
+            const selectDropdown = document.getElementById('selectedPack');
+            selectDropdown.value = packValue;
+            
+            // Scroll smoothly to checkout
+            document.getElementById('checkout').scrollIntoView({ behavior: 'smooth' });
+        }
+
+        // Send Order to WhatsApp Engine
+        function sendToWhatsApp(event) {
+            event.preventDefault();
+
+            // Config Data
+            const whatsappNumber = "212725884766"; // Business WhatsApp Format
+
+            // Form Inputs
+            const pack = document.getElementById('selectedPack').value;
+            const quantity = parseInt(document.getElementById('quantity').value);
+            const name = document.getElementById('clientName').value;
+            const phone = document.getElementById('clientPhone').value;
+            const address = document.getElementById('clientAddress').value;
+
+            // Simple Price Extraction Engine
+            let unitPrice = 0;
+            if (pack.includes("59")) unitPrice = 59;
+            else if (pack.includes("89")) unitPrice = 89;
+            else if (pack.includes("119")) unitPrice = 119;
+
+            const totalPrice = unitPrice * quantity;
+
+            // Message Construction
+            const message = `*🍣 طلبيّة جديدة - SAMURAI STREET 🍣*\n\n` +
+                            `*👤 معلومات الزبون:*\n` +
+                            `• *الاسم الكامل:* ${name}\n` +
+                            `• *رقم الهاتف:* ${phone}\n` +
+                            `• *العنوان:* ${address}\n\n` +
+                            `*📦 تفاصيل الطلب:*\n` +
+                            `• *الباك المختار:* ${pack}\n` +
+                            `• *الكمية:* ${quantity}\n\n` +
+                            `*💰 الحساب الإجمالي:* *${totalPrice} DH*\n\n` +
+                            `_تم إرسال هذا الطلب عبر الموقع الرسمي samuraistreet.online_`;
+
+            // URL Encoding & Redirection
+            const encodedMessage = encodeURIComponent(message);
+            const whatsappURL = `https://wa.me/${whatsappNumber}?text=${encodedMessage}`;
+
+            window.open(whatsappURL, '_blank');
+        }
+    </script>
+</body>
+</html>
