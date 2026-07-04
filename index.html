@@ -863,3 +863,40 @@ applyTranslations('fr');
 
 </body>
 </html>
+# Samurai Street — Website
+
+Site trilingue (FR / EN / Darija) pour Samurai Street, avec commande directe via WhatsApp.
+
+## Structure
+```
+samurai-street/
+├── index.html      ← tout le site (HTML + CSS + JS)
+├── images/         ← logo, photos packs, photos chef, galerie
+└── README.md
+```
+
+## Déployer sur GitHub + Vercel
+
+1. Crée un nouveau repo sur GitHub (ex: `samurai-street`).
+2. Depuis ce dossier :
+   ```bash
+   git init
+   git add .
+   git commit -m "Site Samurai Street"
+   git branch -M main
+   git remote add origin https://github.com/TON-USERNAME/samurai-street.git
+   git push -u origin main
+   ```
+3. Va sur [vercel.com](https://vercel.com) → "Add New Project" → importe le repo GitHub.
+4. Vercel détecte un site statique automatiquement (pas de build nécessaire) → clique "Deploy".
+5. Ton site sera en ligne sur une URL du type `samurai-street.vercel.app`.
+
+## À modifier facilement
+- **Numéro WhatsApp** : cherche `212725884766` dans `index.html` (apparaît dans le bouton flottant, la section contact, et le script de commande).
+- **Prix / contenu des packs** : section `<!-- MENU / PACKS -->`, attribut `data-price`.
+- **Textes trilingues** : tout est dans l'objet `translations` en bas du fichier (`fr`, `en`, `ar`).
+- **Photos** : remplace les fichiers dans `images/` en gardant les mêmes noms, ou change les chemins `src=`.
+
+## Notes
+- Le site est 100% statique — aucun backend requis.
+- Le formulaire de commande envoie les infos du client (nom, téléphone, adresse) + le récapitulatif de commande directement dans un message WhatsApp pré-rempli.
