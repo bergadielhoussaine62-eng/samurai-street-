@@ -1,0 +1,208 @@
+<!DOCTYPE html>
+<html lang="fr" dir="ltr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Suivi de commande — Samurai Street</title>
+<link href="https://fonts.googleapis.com/css2?family=Shippori+Mincho+B1:wght@500;700;800&family=Inter:wght@400;500;600;700&family=Tajawal:wght@400;500;700;900&display=swap" rel="stylesheet">
+
+<!-- Firebase -->
+<script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-app-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore-compat.js"></script>
+
+<style>
+  :root{
+    --bg:#0a0908; --bg-alt:#151210; --bg-panel:#1c1815;
+    --red:#af1f2a; --red-bright:#d92d3a;
+    --gold:#c9a24a; --gold-bright:#e8c877;
+    --cream:#f3ede1; --dim:#a89e8f; --line:#2c2621;
+    --serif:'Shippori Mincho B1', serif; --sans:'Inter', sans-serif;
+  }
+  *{margin:0;padding:0;box-sizing:border-box;}
+  body{
+    background:var(--bg); color:var(--cream); font-family:var(--sans);
+    min-height:100vh; display:flex; flex-direction:column; align-items:center;
+    padding:32px 18px 60px;
+  }
+  .wrap{max-width:560px;width:100%;}
+  .logo-row{display:flex;flex-direction:column;align-items:center;margin-bottom:28px;}
+  .logo-row img{width:64px;height:64px;border-radius:50%;margin-bottom:12px;}
+  .logo-row h1{font-family:var(--serif);font-size:1.3rem;color:var(--cream);}
+  .logo-row h1 span{color:var(--gold);}
+
+  .card{
+    background:var(--bg-panel); border:1px solid var(--line); border-radius:14px;
+    padding:30px 26px; margin-bottom:20px;
+  }
+
+  .state-msg{text-align:center;color:var(--dim);padding:40px 10px;}
+  .state-msg .icon{font-size:2.2rem;margin-bottom:14px;}
+
+  .client-line{display:flex;justify-content:space-between;align-items:baseline;margin-bottom:6px;}
+  .client-line h2{font-family:var(--serif);font-size:1.3rem;color:var(--cream);}
+  .order-id{color:var(--dim);font-size:.75rem;}
+  .pack-summary{color:var(--dim);font-size:.9rem;margin-bottom:22px;padding-bottom:18px;border-bottom:1px dashed var(--line);}
+
+  /* Progress steps */
+  .steps{display:flex;justify-content:space-between;position:relative;margin:30px 0 8px;}
+  .steps::before{
+    content:''; position:absolute; top:19px; left:19px; right:19px; height:3px;
+    background:var(--line); z-index:0;
+  }
+  .steps .fill{
+    content:''; position:absolute; top:19px; left:19px; height:3px;
+    background:var(--gold); z-index:1; transition:width .6s ease;
+  }
+  .step{position:relative;z-index:2;display:flex;flex-direction:column;align-items:center;flex:1;}
+  .step .dot{
+    width:38px;height:38px;border-radius:50%;background:var(--bg);
+    border:3px solid var(--line); display:flex;align-items:center;justify-content:center;
+    font-size:1.1rem; margin-bottom:10px; transition:.4s;
+  }
+  .step.done .dot{border-color:var(--gold);background:var(--gold);color:#1a1510;}
+  .step.active .dot{border-color:var(--red-bright);background:var(--red);color:#fff;
+    box-shadow:0 0 0 6px rgba(175,31,42,.2); animation:pulse 1.6s infinite;}
+  @keyframes pulse{
+    0%{box-shadow:0 0 0 4px rgba(175,31,42,.25);}
+    50%{box-shadow:0 0 0 10px rgba(175,31,42,.08);}
+    100%{box-shadow:0 0 0 4px rgba(175,31,42,.25);}
+  }
+  .step .lbl{font-size:.72rem;color:var(--dim);text-align:center;max-width:80px;}
+  .step.done .lbl, .step.active .lbl{color:var(--cream);font-weight:600;}
+
+  .eta-box{
+    margin-top:26px;background:var(--bg);border:1px solid var(--line);border-radius:10px;
+    padding:18px 20px;text-align:center;
+  }
+  .eta-box .lbl{color:var(--dim);font-size:.78rem;text-transform:uppercase;letter-spacing:.05em;margin-bottom:6px;}
+  .eta-box .time{font-family:var(--serif);font-size:2rem;color:var(--gold);}
+  .eta-box .sub{color:var(--dim);font-size:.8rem;margin-top:4px;}
+
+  .delivered-badge{
+    text-align:center;color:var(--gold);font-family:var(--serif);font-size:1.15rem;margin-top:22px;
+  }
+
+  .wa-btn{
+    display:flex;align-items:center;justify-content:center;gap:10px;
+    background:#25D366;color:#fff;text-decoration:none;font-weight:700;
+    padding:14px;border-radius:8px;margin-top:20px;
+  }
+
+  .refresh-note{text-align:center;color:var(--dim);font-size:.75rem;margin-top:16px;}
+</style>
+</head>
+<body>
+
+<div class="wrap">
+  <div class="logo-row">
+    <h1>Samurai <span>Street</span></h1>
+  </div>
+
+  <div class="card" id="content">
+    <div class="state-msg"><div class="icon">🍣</div>Chargement de votre commande...</div>
+  </div>
+</div>
+
+<script>
+const firebaseConfig = {
+  apiKey: "AIzaSyCIfFeZYQSSxf2e12r3w0bJefivkYBwyxM",
+  authDomain: "samurai-street.firebaseapp.com",
+  projectId: "samurai-street",
+  storageBucket: "samurai-street.firebasestorage.app",
+  messagingSenderId: "93999537946",
+  appId: "1:93999537946:web:998a7a29f77d81089d96a3"
+};
+firebase.initializeApp(firebaseConfig);
+const db = firebase.firestore();
+
+const STEPS = [
+  { key: 'confirmed',  label: 'Confirmée',    icon: '✓' },
+  { key: 'preparing',  label: 'En préparation', icon: '👨‍🍳' },
+  { key: 'onway',      label: 'En route',     icon: '🛵' },
+  { key: 'delivered',  label: 'Livrée',       icon: '🎉' }
+];
+
+function stepIndex(status){
+  const i = STEPS.findIndex(s => s.key === status);
+  return i === -1 ? 0 : i;
+}
+
+const params = new URLSearchParams(window.location.search);
+const orderId = params.get('order');
+const content = document.getElementById('content');
+
+let countdownTimer = null;
+
+function render(data){
+  if(countdownTimer){ clearInterval(countdownTimer); countdownTimer = null; }
+
+  const idx = stepIndex(data.status);
+  const fillPct = (idx / (STEPS.length - 1)) * 100;
+
+  let stepsHtml = '<div class="steps"><div class="fill" style="width:' + fillPct + '%"></div>';
+  STEPS.forEach((s, i) => {
+    let cls = '';
+    if(i < idx) cls = 'done';
+    else if(i === idx) cls = 'active';
+    stepsHtml += `<div class="step ${cls}"><div class="dot">${i <= idx ? (i === idx ? s.icon : '✓') : s.icon}</div><div class="lbl">${s.label}</div></div>`;
+  });
+  stepsHtml += '</div>';
+
+  let etaHtml = '';
+  if(data.status !== 'delivered' && data.etaMinutes && data.confirmedAt){
+    const target = data.confirmedAt.toDate().getTime() + data.etaMinutes * 60000;
+    etaHtml = `<div class="eta-box"><div class="lbl">Temps estimé restant</div><div class="time" id="countdown">--:--</div><div class="sub">Livraison estimée</div></div>`;
+    countdownTimer = setInterval(() => {
+      const now = Date.now();
+      let diff = Math.max(0, target - now);
+      const mins = Math.floor(diff / 60000);
+      const secs = Math.floor((diff % 60000) / 1000);
+      const el = document.getElementById('countdown');
+      if(el){
+        el.textContent = diff <= 0 ? "Presque là !" : `${mins}:${secs.toString().padStart(2,'0')}`;
+      }
+    }, 1000);
+  }
+
+  let deliveredHtml = '';
+  if(data.status === 'delivered'){
+    deliveredHtml = `<div class="delivered-badge">🎉 Bon appétit, ${data.clientName || ''} !</div>`;
+  }
+
+  content.innerHTML = `
+    <div class="client-line">
+      <h2>${data.clientName || 'Commande'}</h2>
+      <span class="order-id">#${orderId.slice(0,6).toUpperCase()}</span>
+    </div>
+    <div class="pack-summary">${data.packSummary || ''}</div>
+    ${stepsHtml}
+    ${etaHtml}
+    ${deliveredHtml}
+    <a class="wa-btn" href="https://wa.me/212725884766" target="_blank">
+      <span>💬</span> Une question ? Contactez-nous
+    </a>
+    <div class="refresh-note">Cette page se met à jour automatiquement</div>
+  `;
+}
+
+if(!orderId){
+  content.innerHTML = `<div class="state-msg"><div class="icon">⚠️</div>Aucune commande trouvée.<br>Vérifiez le lien reçu.</div>`;
+} else {
+  db.collection('orders').doc(orderId).onSnapshot(
+    (doc) => {
+      if(doc.exists){
+        render(doc.data());
+      } else {
+        content.innerHTML = `<div class="state-msg"><div class="icon">⚠️</div>Commande introuvable.<br>Vérifiez le lien reçu.</div>`;
+      }
+    },
+    (err) => {
+      content.innerHTML = `<div class="state-msg"><div class="icon">⚠️</div>Erreur de connexion.<br>Réessayez plus tard.</div>`;
+      console.error(err);
+    }
+  );
+}
+</script>
+
+</body>
+</html>
