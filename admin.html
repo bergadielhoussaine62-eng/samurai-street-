@@ -120,7 +120,18 @@
   .status-btns button:hover:not(.current){border-color:var(--gold);color:var(--gold);}
 
   .track-link{color:var(--gold);font-size:.78rem;text-decoration:none;display:inline-block;}
-  .order-bottom-row{display:flex;justify-content:space-between;align-items:center;margin-top:10px;}
+  .order-bottom-row{display:flex;justify-content:space-between;align-items:center;margin-top:10px;flex-wrap:wrap;gap:8px;}
+  .row-actions{display:flex;gap:8px;}
+  .adjust-btn{
+    background:none;border:1px solid var(--line);color:var(--gold);
+    font-size:.75rem;padding:6px 12px;border-radius:6px;cursor:pointer;transition:.2s;
+  }
+  .adjust-btn:hover{background:var(--gold);color:#1a1510;border-color:var(--gold);}
+  .livreur-btn{
+    background:none;border:1px solid var(--line);color:#7bc4e0;
+    font-size:.75rem;padding:6px 12px;border-radius:6px;cursor:pointer;transition:.2s;
+  }
+  .livreur-btn:hover{background:#7bc4e0;color:#1a1510;border-color:#7bc4e0;}
   .delete-btn{
     background:none;border:1px solid var(--line);color:var(--red-bright);
     font-size:.75rem;padding:6px 12px;border-radius:6px;cursor:pointer;transition:.2s;
@@ -488,7 +499,11 @@ function listenOrders(){
           <div class="status-btns"></div>
           <div class="order-bottom-row">
             <a class="track-link" href="${trackUrl}" target="_blank">🔗 Voir la page de suivi</a>
-            <button class="delete-btn" data-id="${id}">🗑️ Supprimer</button>
+            <div class="row-actions">
+              <button class="adjust-btn" data-id="${id}">⏱ Ajuster le temps</button>
+              <button class="livreur-btn" data-id="${id}">🛵 Lien livreur</button>
+              <button class="delete-btn" data-id="${id}">🗑️ Supprimer</button>
+            </div>
           </div>
         `;
 
@@ -508,6 +523,23 @@ function listenOrders(){
         row.querySelector('.delete-btn').addEventListener('click', () => {
           if(confirm(`Supprimer la commande de ${data.clientName || 'ce client'} ? Cette action est irréversible.`)){
             db.collection('orders').doc(id).delete().catch(err => alert('Erreur: ' + err.message));
+          }
+        });
+
+        row.querySelector('.livreur-btn').addEventListener('click', () => {
+          const livreurUrl = `${TRACK_BASE_URL.replace('track.html','livreur.html')}?order=${id}`;
+          const waMsg = encodeURIComponent(`Lien livreur pour la commande de ${data.clientName || ''} :\n${livreurUrl}`);
+          navigator.clipboard.writeText(livreurUrl);
+          window.open(`https://wa.me/?text=${waMsg}`, '_blank');
+        });
+
+        row.querySelector('.adjust-btn').addEventListener('click', () => {
+          const newEta = prompt(`Nouveau temps estimé (en minutes, à partir de maintenant) pour ${data.clientName || 'ce client'} :`, data.etaMinutes || 30);
+          if(newEta && !isNaN(newEta)){
+            db.collection('orders').doc(id).update({
+              etaMinutes: parseInt(newEta, 10),
+              confirmedAt: firebase.firestore.FieldValue.serverTimestamp()
+            }).catch(err => alert('Erreur: ' + err.message));
           }
         });
       });
