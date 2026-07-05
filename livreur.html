@@ -1,0 +1,179 @@
+<!DOCTYPE html>
+<html lang="fr" dir="ltr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Livreur — Samurai Street</title>
+<link href="https://fonts.googleapis.com/css2?family=Shippori+Mincho+B1:wght@500;700;800&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+
+<script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-app-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore-compat.js"></script>
+
+<style>
+  :root{
+    --bg:#0a0908; --bg-panel:#1c1815;
+    --red:#af1f2a; --red-bright:#d92d3a;
+    --gold:#c9a24a; --cream:#f3ede1; --dim:#a89e8f; --line:#2c2621;
+    --serif:'Shippori Mincho B1', serif; --sans:'Inter', sans-serif;
+  }
+  *{margin:0;padding:0;box-sizing:border-box;}
+  body{
+    background:var(--bg);color:var(--cream);font-family:var(--sans);
+    min-height:100vh;display:flex;flex-direction:column;align-items:center;
+    padding:36px 18px;
+  }
+  .wrap{max-width:420px;width:100%;text-align:center;}
+  h1{font-family:var(--serif);font-size:1.4rem;margin-bottom:6px;}
+  h1 span{color:var(--gold);}
+  .sub{color:var(--dim);font-size:.85rem;margin-bottom:30px;}
+
+  .card{background:var(--bg-panel);border:1px solid var(--line);border-radius:14px;padding:30px 24px;}
+  .client-name{font-family:var(--serif);font-size:1.2rem;margin-bottom:6px;}
+  .order-meta{color:var(--dim);font-size:.85rem;margin-bottom:26px;}
+
+  .status-pill{
+    display:inline-block;padding:8px 18px;border-radius:100px;font-size:.85rem;font-weight:700;
+    margin-bottom:24px;
+  }
+  .status-off{background:rgba(168,158,143,.2);color:var(--dim);}
+  .status-on{background:rgba(90,160,90,.2);color:#7bc47f;}
+
+  .btn{
+    width:100%;padding:16px;border-radius:8px;font-weight:700;font-size:1rem;
+    border:none;cursor:pointer;transition:.2s;
+  }
+  .btn-start{background:var(--red);color:#fff;}
+  .btn-start:hover{background:var(--red-bright);}
+  .btn-stop{background:var(--bg);border:1px solid var(--line);color:var(--dim);}
+
+  .gps-info{margin-top:20px;color:var(--dim);font-size:.78rem;line-height:1.7;}
+  .error-msg{color:var(--red-bright);font-size:.85rem;margin-top:16px;}
+  .keep-open{margin-top:26px;color:var(--gold);font-size:.8rem;background:rgba(201,162,74,.1);
+    border:1px solid rgba(201,162,74,.3);border-radius:8px;padding:12px 16px;}
+</style>
+</head>
+<body>
+
+<div class="wrap">
+  <h1>Samurai <span>Street</span></h1>
+  <p class="sub">Espace livreur</p>
+
+  <div class="card" id="content">
+    <div class="order-meta">Chargement de la commande...</div>
+  </div>
+</div>
+
+<script>
+const firebaseConfig = {
+  apiKey: "AIzaSyCIfFeZYQSSxf2e12r3w0bJefivkYBwyxM",
+  authDomain: "samurai-street.firebaseapp.com",
+  projectId: "samurai-street",
+  storageBucket: "samurai-street.firebasestorage.app",
+  messagingSenderId: "93999537946",
+  appId: "1:93999537946:web:998a7a29f77d81089d96a3"
+};
+firebase.initializeApp(firebaseConfig);
+const db = firebase.firestore();
+
+const params = new URLSearchParams(window.location.search);
+const orderId = params.get('order');
+const content = document.getElementById('content');
+
+let watchId = null;
+let sharing = false;
+let lastSent = 0;
+
+function renderUI(data){
+  content.innerHTML = `
+    <div class="client-name">${data.clientName || 'Commande'}</div>
+    <div class="order-meta">${data.packSummary || ''}</div>
+    <div class="status-pill ${sharing ? 'status-on' : 'status-off'}" id="statusPill">
+      ${sharing ? '🟢 Position partagée' : '⚪ Position non partagée'}
+    </div>
+    <button class="btn ${sharing ? 'btn-stop' : 'btn-start'}" id="toggleBtn">
+      ${sharing ? '⏹ Arrêter le partage' : '📍 Démarrer le partage de ma position'}
+    </button>
+    <div class="gps-info" id="gpsInfo"></div>
+    <div class="error-msg" id="errMsg"></div>
+    <div class="keep-open">⚠️ Garde cette page ouverte pendant la livraison pour que le client voie ta position en direct.</div>
+  `;
+
+  document.getElementById('toggleBtn').addEventListener('click', () => {
+    if(sharing){ stopSharing(); } else { startSharing(); }
+  });
+}
+
+function startSharing(){
+  if(!navigator.geolocation){
+    document.getElementById('errMsg').textContent = "GPS non disponible sur cet appareil.";
+    return;
+  }
+  watchId = navigator.geolocation.watchPosition(
+    (pos) => {
+      sharing = true;
+      const now = Date.now();
+      document.getElementById('gpsInfo').textContent =
+        `Position mise à jour · ${new Date().toLocaleTimeString('fr-FR')}`;
+      // throttle writes to every ~5s
+      if(now - lastSent > 5000){
+        lastSent = now;
+        db.collection('orders').doc(orderId).update({
+          livreurLat: pos.coords.latitude,
+          livreurLng: pos.coords.longitude,
+          livreurUpdatedAt: firebase.firestore.FieldValue.serverTimestamp()
+        }).catch(err => console.error(err));
+      }
+      updateToggleUI();
+    },
+    (err) => {
+      document.getElementById('errMsg').textContent =
+        "Impossible d'accéder à ta position : " + err.message;
+    },
+    { enableHighAccuracy: true, maximumAge: 5000, timeout: 15000 }
+  );
+  updateToggleUI(true);
+}
+
+function stopSharing(){
+  if(watchId !== null){ navigator.geolocation.clearWatch(watchId); watchId = null; }
+  sharing = false;
+  updateToggleUI();
+}
+
+function updateToggleUI(startingUp){
+  const pill = document.getElementById('statusPill');
+  const btn = document.getElementById('toggleBtn');
+  if(sharing || startingUp){
+    pill.className = 'status-pill status-on';
+    pill.textContent = '🟢 Position partagée';
+    btn.className = 'btn btn-stop';
+    btn.textContent = '⏹ Arrêter le partage';
+  } else {
+    pill.className = 'status-pill status-off';
+    pill.textContent = '⚪ Position non partagée';
+    btn.className = 'btn btn-start';
+    btn.textContent = '📍 Démarrer le partage de ma position';
+  }
+}
+
+if(!orderId){
+  content.innerHTML = `<div class="error-msg">Lien invalide. Aucune commande spécifiée.</div>`;
+} else {
+  db.collection('orders').doc(orderId).get().then(doc => {
+    if(doc.exists){
+      renderUI(doc.data());
+    } else {
+      content.innerHTML = `<div class="error-msg">Commande introuvable.</div>`;
+    }
+  }).catch(err => {
+    content.innerHTML = `<div class="error-msg">Erreur de connexion.</div>`;
+  });
+}
+
+window.addEventListener('beforeunload', () => {
+  if(watchId !== null) navigator.geolocation.clearWatch(watchId);
+});
+</script>
+
+</body>
+</html>
