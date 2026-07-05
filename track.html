@@ -5,6 +5,8 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Suivi de commande — Samurai Street</title>
 <link href="https://fonts.googleapis.com/css2?family=Shippori+Mincho+B1:wght@500;700;800&family=Inter:wght@400;500;600;700&family=Tajawal:wght@400;500;700;900&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css">
+<script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
 
 <!-- Firebase -->
 <script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-app-compat.js"></script>
@@ -89,6 +91,9 @@
   }
 
   .refresh-note{text-align:center;color:var(--dim);font-size:.75rem;margin-top:16px;}
+
+  #liveMap{height:240px;border-radius:10px;border:1px solid var(--line);margin-top:20px;overflow:hidden;display:none;}
+  .map-label{color:var(--dim);font-size:.75rem;text-align:center;margin-top:8px;display:none;}
 </style>
 </head>
 <body>
@@ -101,6 +106,9 @@
   <div class="card" id="content">
     <div class="state-msg"><div class="icon">🍣</div>Chargement de votre commande...</div>
   </div>
+
+  <div id="liveMap"></div>
+  <div class="map-label" id="mapLabel">🛵 Position du livreur en direct</div>
 </div>
 
 <script>
@@ -121,6 +129,61 @@ const STEPS = [
   { key: 'onway',      label: 'En route',     icon: '🛵' },
   { key: 'delivered',  label: 'Livrée',       icon: '🎉' }
 ];
+
+// ⚠️ Approximatif — à remplacer par les coordonnées exactes du restaurant
+const SHOP_LAT = 34.0531;
+const SHOP_LNG = -6.7985;
+
+let liveMap = null, shopMarker = null, customerMarker = null, livreurMarker = null;
+
+function ensureMap(){
+  if(liveMap) return;
+  document.getElementById('liveMap').style.display = 'block';
+  liveMap = L.map('liveMap').setView([SHOP_LAT, SHOP_LNG], 13);
+  L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', { attribution: '© OpenStreetMap' }).addTo(liveMap);
+  const shopIcon = L.divIcon({ html:'🏮', className:'', iconSize:[26,26] });
+  shopMarker = L.marker([SHOP_LAT, SHOP_LNG], { icon: shopIcon }).addTo(liveMap).bindPopup('Samurai Street');
+  setTimeout(() => liveMap.invalidateSize(), 200);
+}
+
+function updateMap(data){
+  const hasCustomer = data.customerLat && data.customerLng;
+  const hasLivreur = data.livreurLat && data.livreurLng;
+  if(!hasCustomer && !hasLivreur) return;
+
+  ensureMap();
+
+  const bounds = [[SHOP_LAT, SHOP_LNG]];
+
+  if(hasCustomer){
+    const custIcon = L.divIcon({ html:'📍', className:'', iconSize:[26,26] });
+    if(!customerMarker){
+      customerMarker = L.marker([data.customerLat, data.customerLng], { icon: custIcon }).addTo(liveMap).bindPopup('Adresse de livraison');
+    } else {
+      customerMarker.setLatLng([data.customerLat, data.customerLng]);
+    }
+    bounds.push([data.customerLat, data.customerLng]);
+  }
+
+  if(hasLivreur && data.status === 'onway'){
+    document.getElementById('mapLabel').style.display = 'block';
+    const bikeIcon = L.divIcon({ html:'🛵', className:'', iconSize:[28,28] });
+    if(!livreurMarker){
+      livreurMarker = L.marker([data.livreurLat, data.livreurLng], { icon: bikeIcon }).addTo(liveMap).bindPopup('Livreur');
+    } else {
+      livreurMarker.setLatLng([data.livreurLat, data.livreurLng]);
+    }
+    bounds.push([data.livreurLat, data.livreurLng]);
+  } else if(livreurMarker && data.status !== 'onway'){
+    liveMap.removeLayer(livreurMarker);
+    livreurMarker = null;
+    document.getElementById('mapLabel').style.display = 'none';
+  }
+
+  if(bounds.length > 1){
+    liveMap.fitBounds(bounds, { padding: [30,30] });
+  }
+}
 
 function stepIndex(status){
   const i = STEPS.findIndex(s => s.key === status);
@@ -183,6 +246,8 @@ function render(data){
     </a>
     <div class="refresh-note">Cette page se met à jour automatiquement</div>
   `;
+
+  updateMap(data);
 }
 
 if(!orderId){
