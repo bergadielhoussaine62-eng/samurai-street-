@@ -174,7 +174,7 @@ function render(data){
       <h2>${data.clientName || 'Commande'}</h2>
       <span class="order-id">#${orderId.slice(0,6).toUpperCase()}</span>
     </div>
-    <div class="pack-summary">${data.packSummary || ''}</div>
+  <div class="pack-summary">${data.packSummary || ''}${data.totalPrice ? ' — <b style="color:var(--gold)">' + data.totalPrice + ' DH</b>' : ''}</div>
     ${stepsHtml}
     ${etaHtml}
     ${deliveredHtml}
