@@ -68,6 +68,31 @@
   .link-actions{display:flex;gap:10px;margin-top:12px;flex-wrap:wrap;}
   .link-actions .btn{width:auto;flex:1;padding:10px 14px;font-size:.82rem;}
 
+  /* Product picker */
+  .product-picker{
+    background:var(--bg);border:1px solid var(--line);border-radius:8px;
+    padding:6px 14px;max-height:340px;overflow-y:auto;
+  }
+  .picker-group-title{
+    color:var(--gold);font-size:.78rem;font-weight:700;text-transform:uppercase;
+    letter-spacing:.04em;margin:14px 0 8px;
+  }
+  .picker-group-title:first-child{margin-top:8px;}
+  .picker-row{
+    display:flex;justify-content:space-between;align-items:center;
+    padding:8px 0;border-bottom:1px solid var(--line);
+  }
+  .picker-row:last-child{border-bottom:none;}
+  .picker-name{font-size:.85rem;color:var(--cream);}
+  .picker-price{color:var(--dim);font-size:.75rem;margin-left:6px;}
+  .qty-control.mini-qty{display:flex;align-items:center;border:1px solid var(--line);border-radius:6px;overflow:hidden;}
+  .qty-control.mini-qty button{background:var(--bg-panel);color:var(--cream);border:none;width:26px;height:26px;font-size:.9rem;cursor:pointer;}
+  .qty-control.mini-qty button:hover{background:var(--red);}
+  .qty-control.mini-qty input{width:32px;text-align:center;background:var(--bg-panel);border:none;color:var(--cream);font-weight:700;height:26px;font-size:.82rem;}
+  .picker-total{
+    text-align:right;margin-top:10px;color:var(--gold);font-family:var(--serif);font-size:1.2rem;
+  }
+
   /* Orders list */
   .order-row{
     border:1px solid var(--line);border-radius:10px;padding:16px 18px;margin-bottom:14px;
@@ -144,8 +169,113 @@
         </div>
       </div>
       <div class="field">
-        <label>Résumé de la commande</label>
-        <textarea id="newPack" placeholder="Ex: Pack Duo x1, Samurai Dragon x2"></textarea>
+        <label>Sélectionner les articles</label>
+        <div class="product-picker" id="productPicker">
+          <div class="picker-group-title">📦 Packs</div>
+          <div class="picker-row" data-key="solo" data-price="59" data-label="Pack Solo">
+            <span class="picker-name">Pack Solo <span class="picker-price">59 DH</span></span>
+            <div class="qty-control mini-qty">
+              <button type="button" class="pk-minus">−</button>
+              <input type="text" class="pk-qty" value="0" readonly>
+              <button type="button" class="pk-plus">+</button>
+            </div>
+          </div>
+          <div class="picker-row" data-key="duo" data-price="89" data-label="Pack Duo">
+            <span class="picker-name">Pack Duo <span class="picker-price">89 DH</span></span>
+            <div class="qty-control mini-qty">
+              <button type="button" class="pk-minus">−</button>
+              <input type="text" class="pk-qty" value="0" readonly>
+              <button type="button" class="pk-plus">+</button>
+            </div>
+          </div>
+          <div class="picker-row" data-key="family" data-price="119" data-label="Pack Family">
+            <span class="picker-name">Pack Family <span class="picker-price">119 DH</span></span>
+            <div class="qty-control mini-qty">
+              <button type="button" class="pk-minus">−</button>
+              <input type="text" class="pk-qty" value="0" readonly>
+              <button type="button" class="pk-plus">+</button>
+            </div>
+          </div>
+          <div class="picker-row" data-key="shogun" data-price="199" data-label="Pack Shogun">
+            <span class="picker-name">Pack Shogun <span class="picker-price">199 DH</span></span>
+            <div class="qty-control mini-qty">
+              <button type="button" class="pk-minus">−</button>
+              <input type="text" class="pk-qty" value="0" readonly>
+              <button type="button" class="pk-plus">+</button>
+            </div>
+          </div>
+
+          <div class="picker-group-title">🍣 À la carte</div>
+          <div class="picker-row" data-key="safood" data-price="30" data-label="Safood Explosion">
+            <span class="picker-name">Safood Explosion <span class="picker-price">30 DH</span></span>
+            <div class="qty-control mini-qty">
+              <button type="button" class="pk-minus">−</button>
+              <input type="text" class="pk-qty" value="0" readonly>
+              <button type="button" class="pk-plus">+</button>
+            </div>
+          </div>
+          <div class="picker-row" data-key="makicheese" data-price="29" data-label="Maki Cheese Flambé">
+            <span class="picker-name">Maki Cheese Flambé <span class="picker-price">29 DH</span></span>
+            <div class="qty-control mini-qty">
+              <button type="button" class="pk-minus">−</button>
+              <input type="text" class="pk-qty" value="0" readonly>
+              <button type="button" class="pk-plus">+</button>
+            </div>
+          </div>
+          <div class="picker-row" data-key="rouayal" data-price="35" data-label="Rouayal">
+            <span class="picker-name">Rouayal <span class="picker-price">35 DH</span></span>
+            <div class="qty-control mini-qty">
+              <button type="button" class="pk-minus">−</button>
+              <input type="text" class="pk-qty" value="0" readonly>
+              <button type="button" class="pk-plus">+</button>
+            </div>
+          </div>
+          <div class="picker-row" data-key="bigcheese" data-price="35" data-label="Big Cheese Tanuki">
+            <span class="picker-name">Big Cheese Tanuki <span class="picker-price">35 DH</span></span>
+            <div class="qty-control mini-qty">
+              <button type="button" class="pk-minus">−</button>
+              <input type="text" class="pk-qty" value="0" readonly>
+              <button type="button" class="pk-plus">+</button>
+            </div>
+          </div>
+          <div class="picker-row" data-key="pizzafruitsdemer" data-price="39" data-label="Sushi Pizza Fruits de Mer">
+            <span class="picker-name">Sushi Pizza Fruits de Mer <span class="picker-price">39 DH</span></span>
+            <div class="qty-control mini-qty">
+              <button type="button" class="pk-minus">−</button>
+              <input type="text" class="pk-qty" value="0" readonly>
+              <button type="button" class="pk-plus">+</button>
+            </div>
+          </div>
+          <div class="picker-row" data-key="chickencrispy" data-price="35" data-label="Chicken Crispy Onion">
+            <span class="picker-name">Chicken Crispy Onion <span class="picker-price">35 DH</span></span>
+            <div class="qty-control mini-qty">
+              <button type="button" class="pk-minus">−</button>
+              <input type="text" class="pk-qty" value="0" readonly>
+              <button type="button" class="pk-plus">+</button>
+            </div>
+          </div>
+          <div class="picker-row" data-key="samuraidragon" data-price="45" data-label="Samurai Dragon">
+            <span class="picker-name">Samurai Dragon <span class="picker-price">45 DH</span></span>
+            <div class="qty-control mini-qty">
+              <button type="button" class="pk-minus">−</button>
+              <input type="text" class="pk-qty" value="0" readonly>
+              <button type="button" class="pk-plus">+</button>
+            </div>
+          </div>
+          <div class="picker-row" data-key="pizzapoulet" data-price="35" data-label="Sushi Pizza Poulet">
+            <span class="picker-name">Sushi Pizza Poulet <span class="picker-price">35 DH</span></span>
+            <div class="qty-control mini-qty">
+              <button type="button" class="pk-minus">−</button>
+              <input type="text" class="pk-qty" value="0" readonly>
+              <button type="button" class="pk-plus">+</button>
+            </div>
+          </div>
+        </div>
+        <div class="picker-total">Total : <span id="pickerTotal">0 DH</span></div>
+      </div>
+      <div class="field">
+        <label>Note (optionnel)</label>
+        <textarea id="newNote" placeholder="Ex: sans wasabi, livraison rapide..."></textarea>
       </div>
       <div class="field">
         <label>Temps estimé (minutes, optionnel)</label>
@@ -214,14 +344,63 @@ auth.onAuthStateChanged(user => {
   }
 });
 
+/* ---------- PRODUCT PICKER ---------- */
+const pickerRows = document.querySelectorAll('.picker-row');
+
+function updatePickerTotal(){
+  let total = 0;
+  pickerRows.forEach(row => {
+    const qty = parseInt(row.querySelector('.pk-qty').value, 10);
+    const price = parseInt(row.dataset.price, 10);
+    total += qty * price;
+  });
+  document.getElementById('pickerTotal').textContent = total + ' DH';
+}
+
+pickerRows.forEach(row => {
+  const qtyInput = row.querySelector('.pk-qty');
+  row.querySelector('.pk-minus').addEventListener('click', () => {
+    let v = parseInt(qtyInput.value, 10);
+    if(v > 0){ qtyInput.value = v - 1; updatePickerTotal(); }
+  });
+  row.querySelector('.pk-plus').addEventListener('click', () => {
+    let v = parseInt(qtyInput.value, 10);
+    qtyInput.value = v + 1; updatePickerTotal();
+  });
+});
+
+function buildOrderSummary(){
+  let parts = [];
+  let total = 0;
+  pickerRows.forEach(row => {
+    const qty = parseInt(row.querySelector('.pk-qty').value, 10);
+    if(qty > 0){
+      const price = parseInt(row.dataset.price, 10);
+      const label = row.dataset.label;
+      parts.push(`${label} x${qty}`);
+      total += qty * price;
+    }
+  });
+  return { summary: parts.join(', '), total };
+}
+
+function resetPicker(){
+  pickerRows.forEach(row => { row.querySelector('.pk-qty').value = 0; });
+  updatePickerTotal();
+}
+
 /* ---------- CREATE ORDER ---------- */
 document.getElementById('createBtn').addEventListener('click', async () => {
   const clientName = document.getElementById('newName').value.trim();
   const phone = document.getElementById('newPhone').value.trim();
-  const packSummary = document.getElementById('newPack').value.trim();
+  const note = document.getElementById('newNote').value.trim();
   const etaVal = document.getElementById('newEta').value.trim();
+  const { summary, total } = buildOrderSummary();
 
   if(!clientName){ alert('Entrez le nom du client.'); return; }
+  if(!summary){ alert('Sélectionnez au moins un article.'); return; }
+
+  const packSummary = summary + (note ? ` — ${note}` : '');
 
   const btn = document.getElementById('createBtn');
   btn.disabled = true; btn.textContent = 'Création...';
@@ -231,6 +410,7 @@ document.getElementById('createBtn').addEventListener('click', async () => {
       clientName,
       phone,
       packSummary,
+      totalPrice: total,
       etaMinutes: etaVal ? parseInt(etaVal, 10) : null,
       status: 'confirmed',
       confirmedAt: firebase.firestore.FieldValue.serverTimestamp(),
@@ -252,7 +432,7 @@ document.getElementById('createBtn').addEventListener('click', async () => {
     };
 
     const waMessage = encodeURIComponent(
-      `Bonjour ${clientName} 👋\nVotre commande Samurai Street est confirmée !\nSuivez-la en direct ici :\n${trackUrl}`
+      `Bonjour ${clientName} 👋\nVotre commande Samurai Street (${total} DH) est confirmée !\nSuivez-la en direct ici :\n${trackUrl}`
     );
     const waPhone = phone.replace(/\D/g,'');
     document.getElementById('sendWaBtn').href = waPhone
@@ -262,8 +442,9 @@ document.getElementById('createBtn').addEventListener('click', async () => {
     // reset form
     document.getElementById('newName').value = '';
     document.getElementById('newPhone').value = '';
-    document.getElementById('newPack').value = '';
+    document.getElementById('newNote').value = '';
     document.getElementById('newEta').value = '';
+    resetPicker();
 
   }catch(err){
     alert('Erreur : ' + err.message);
@@ -297,7 +478,7 @@ function listenOrders(){
             </div>
             <span class="status-badge status-${data.status}">${STATUS_LIST.find(s=>s.key===data.status)?.label || data.status}</span>
           </div>
-          <div class="order-pack">${data.packSummary || ''}${data.etaMinutes ? ' · ETA: ' + data.etaMinutes + ' min' : ''}</div>
+          <div class="order-pack">${data.packSummary || ''}${data.totalPrice ? ' · <b>' + data.totalPrice + ' DH</b>' : ''}${data.etaMinutes ? ' · ETA: ' + data.etaMinutes + ' min' : ''}</div>
           <div class="status-btns"></div>
           <a class="track-link" href="${trackUrl}" target="_blank">🔗 Voir la page de suivi</a>
         `;
