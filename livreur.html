@@ -5,6 +5,8 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Livreur — Samurai Street</title>
 <link href="https://fonts.googleapis.com/css2?family=Shippori+Mincho+B1:wght@500;700;800&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css">
+<script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
 
 <script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-app-compat.js"></script>
 <script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore-compat.js"></script>
@@ -50,6 +52,7 @@
   .error-msg{color:var(--red-bright);font-size:.85rem;margin-top:16px;}
   .keep-open{margin-top:26px;color:var(--gold);font-size:.8rem;background:rgba(201,162,74,.1);
     border:1px solid rgba(201,162,74,.3);border-radius:8px;padding:12px 16px;}
+  #destMap{height:200px;border-radius:8px;border:1px solid var(--line);margin-bottom:14px;}
 </style>
 </head>
 <body>
@@ -75,6 +78,10 @@ const firebaseConfig = {
 firebase.initializeApp(firebaseConfig);
 const db = firebase.firestore();
 
+// ⚠️ Approximatif — à remplacer par les coordonnées exactes du restaurant
+const SHOP_LAT = 34.02113342285156;
+const SHOP_LNG = -6.765234470367432;
+
 const params = new URLSearchParams(window.location.search);
 const orderId = params.get('order');
 const content = document.getElementById('content');
@@ -84,9 +91,12 @@ let sharing = false;
 let lastSent = 0;
 
 function renderUI(data){
+  const hasCustomerLoc = data.customerLat && data.customerLng;
   content.innerHTML = `
     <div class="client-name">${data.clientName || 'Commande'}</div>
     <div class="order-meta">${data.packSummary || ''}</div>
+    ${data.address ? `<div class="order-meta" style="margin-top:-14px;margin-bottom:20px;">📍 ${data.address}</div>` : ''}
+    ${hasCustomerLoc ? `<div id="destMap"></div><a class="btn" id="navBtn" target="_blank" style="display:block;text-decoration:none;text-align:center;background:#4285F4;color:#fff;margin-bottom:20px;">🧭 Ouvrir dans Google Maps</a>` : ''}
     <div class="status-pill ${sharing ? 'status-on' : 'status-off'}" id="statusPill">
       ${sharing ? '🟢 Position partagée' : '⚪ Position non partagée'}
     </div>
@@ -101,6 +111,20 @@ function renderUI(data){
   document.getElementById('toggleBtn').addEventListener('click', () => {
     if(sharing){ stopSharing(); } else { startSharing(); }
   });
+
+  if(hasCustomerLoc){
+    document.getElementById('navBtn').href =
+      `https://www.google.com/maps/dir/?api=1&destination=${data.customerLat},${data.customerLng}`;
+
+    const destMap = L.map('destMap').setView([data.customerLat, data.customerLng], 14);
+    L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', { attribution: '© OpenStreetMap' }).addTo(destMap);
+    const shopIcon = L.divIcon({ html:'🏮', className:'', iconSize:[24,24] });
+    const custIcon = L.divIcon({ html:'📍', className:'', iconSize:[26,26] });
+    L.marker([SHOP_LAT, SHOP_LNG], { icon: shopIcon }).addTo(destMap).bindPopup('Samurai Street');
+    L.marker([data.customerLat, data.customerLng], { icon: custIcon }).addTo(destMap).bindPopup('Client');
+    destMap.fitBounds([[SHOP_LAT, SHOP_LNG],[data.customerLat, data.customerLng]], { padding:[30,30] });
+    setTimeout(() => destMap.invalidateSize(), 200);
+  }
 }
 
 function startSharing(){
