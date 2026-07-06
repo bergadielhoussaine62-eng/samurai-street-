@@ -1059,8 +1059,23 @@ const db = firebase.firestore();
 ========================================================= */
 const SHOP_LAT = 34.02113342285156;
 const SHOP_LNG = -6.765234470367432;
-const DELIVERY_RATE_PER_KM = 2;   // DH par km
-const DELIVERY_MAX_FEE = 10;      // plafond en DH
+
+/* Grille de tarifs de livraison selon la distance — modifiable facilement */
+const DELIVERY_TIERS = [
+  { maxKm: 1.5, fee: 5 },
+  { maxKm: 3,   fee: 7 },
+  { maxKm: 5,   fee: 10 },
+  { maxKm: 8,   fee: 15 },
+  { maxKm: 12,  fee: 20 },
+  { maxKm: Infinity, fee: 25 }
+];
+
+function calcDeliveryFee(distanceKm){
+  for(const tier of DELIVERY_TIERS){
+    if(distanceKm <= tier.maxKm) return tier.fee;
+  }
+  return DELIVERY_TIERS[DELIVERY_TIERS.length - 1].fee;
+}
 
 let customerLat = null, customerLng = null, deliveryFee = 0;
 
@@ -1085,7 +1100,7 @@ function haversineKm(lat1, lng1, lat2, lng2){
 function updateDeliveryFee(lat, lng){
   customerLat = lat; customerLng = lng;
   const dist = haversineKm(SHOP_LAT, SHOP_LNG, lat, lng);
-  deliveryFee = Math.min(DELIVERY_MAX_FEE, Math.round(dist * DELIVERY_RATE_PER_KM));
+  deliveryFee = calcDeliveryFee(dist);
   const feeNote = document.getElementById('deliveryFeeNote');
   feeNote.textContent = `📍 ${dist.toFixed(1)} km — Frais de livraison: ${deliveryFee} DH`;
   renderOrderSummary();
